@@ -15,6 +15,21 @@
   ],
   "author": "Marko Crnkovic, Paul Ke, Tony Jimenez",
   "license": "BSD-3-Clause-No-Nuclear-License",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,json,md}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
   "devDependencies": {
     "@types/node": "^13.7.2",
     "@typescript-eslint/eslint-plugin": "^2.20.0",
