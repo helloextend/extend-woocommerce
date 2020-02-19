@@ -1,0 +1,19 @@
+{
+  "name": "extend-woocommerce",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf ./build && tsc",
+  	"start": "npm run build && node build/index.js"
+  },
+  "keywords": ["extend", "woocommerce"],
+  "author": "Marko Crnkovic, Paul Ke, Tony Jimenez",
+  "license": "BSD-3-Clause-No-Nuclear-License",
+  "devDependencies": {
+    "@types/node": "^13.7.2",
+    "rimraf": "^3.0.2",
+    "typescript": "^3.7.5"
+  }
+}
