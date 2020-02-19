@@ -1,0 +1,4 @@
+#!/bin/sh
+
+yarn
+npm i -D lint-staged
