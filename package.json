@@ -6,13 +6,30 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf ./build && tsc",
-  	"start": "npm run build && node build/index.js"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "start": "npm run build && node build/index.js"
   },
-  "keywords": ["extend", "woocommerce"],
+  "keywords": [
+    "extend",
+    "woocommerce"
+  ],
   "author": "Marko Crnkovic, Paul Ke, Tony Jimenez",
   "license": "BSD-3-Clause-No-Nuclear-License",
   "devDependencies": {
     "@types/node": "^13.7.2",
+    "@typescript-eslint/eslint-plugin": "^2.20.0",
+    "@typescript-eslint/parser": "^2.20.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-import-resolver-typescript": "^2.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-json": "^2.0.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.18.3",
+    "husky": "^4.2.3",
+    "prettier": "^1.19.1",
     "rimraf": "^3.0.2",
     "typescript": "^3.7.5"
   }

@@ -1,6 +1,6 @@
 
 // alert("hi");
-console.log("What number to square?");
+console.log('What number to square?');
 
 // const input:number = readline()
 

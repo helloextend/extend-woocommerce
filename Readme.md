@@ -7,14 +7,23 @@ This project integrates Extend into WooCommerce's platform.
 
 ### Getting Started
 
-`npm start` will automate the build and start the app. This nukes the build folder as well.
+`yarn start` will automate the build and start the app. This nukes the build folder as well.
 
-`npm build` will build a new version. `npm start` calls upon this script.
+`yarn build` will build a new version. `npm start` calls upon this script.
 
-`yarn tsc` will lint your files for you.
+`yarn lint` will lint your files for you.
 
-### Building
-`npm start`
+### Structure
+`/src` houses the source files
+
+`/build` houses the compiled files once `yarn build`
+
+> `yarn start` calls upon `yarn build`
+
+### Contribution Rules
+**🛑 DO NOT CIRCUMVENT GIT HOOKS 🛑**
+
+Fix your errors and warnings, and then push. Do not change any of the config files without everyones approval.
 
 ### Authors
 Marko Crnkovic
