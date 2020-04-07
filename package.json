@@ -49,9 +49,6 @@
     "rimraf": "^3.0.2",
     "typescript": "^3.7.5"
   },
-  "engines": {
-    "node": "10.x"
-  },
   "dependencies": {
     "express": "^4.17.1"
   }
