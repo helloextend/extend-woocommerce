@@ -1,3 +1,5 @@
+const serviceResRequest = '{"totalAmountDue":{"currencyCode":"USD","value":374},"payer":{"name":"USFExtend "},"payee":{"name":"Extend, Inc.","email":"billing@helloextend.com","address":{"country":"USA","province":"CA","city":"San Francisco","address1":"535 Mission St., 11th Floor","postalCode":"94526"}},"details":{"storeId":"83d57b1a-4674-46d2-8831-373680d5637d","invoiceDate":"2020-04-20T19:46:25.165Z"},"id":"5bcc3be6-41e3-4fa4-bb01-440fa9e9a9c2","items":[{"unitPrice":{"currencyCode":"USD","value":374},"metadata":{"planId":"10001-misc-elec-base-replace-1y","product":{"name":"Airpods Pro Black","referenceId":"1654385435","price":{"currencyCode":"USD","value":23999}}},"quantity":1,"lineTotal":{"currencyCode":"USD","value":374},"discount":{"percent":25,"amount":{"currencyCode":"USD","value":125},"label":"Merchant revenue share"},"title":"10001-misc-elec-base-replace-1y","transactionDate":"2020-04-20T19:45:05.000Z","retailPrice":{"currencyCode":"USD","value":499}}]}'
+
 const express = require('express')
 const path = require('path')
 const PORT = process.env.PORT || 5000
@@ -5,6 +7,10 @@ const PORT = process.env.PORT || 5000
 const app = express();
 
 app.get('/', (req: any, res: any) => res.send('Hello World'));
+
+// Get Contract
+app.get('/contract/:contractId', (req: Object, res: Object) => getContract(req, res));
+
 app.listen(PORT, () => console.log(`I'm all ears on ${ PORT }`))
 
 var https = require('follow-redirects').https;
@@ -125,3 +131,38 @@ var req = https.request(options, function (res) {
   });
 });
 req.end();
+
+
+/*
+
+  CONTRACT Retrieving
+
+*/
+
+function getContract(req: any, res: any) {
+
+  const contractId = req.params.contractId;
+
+  var contractObject = {
+    'method': 'GET',
+    'hostname': 'api-demo.helloextend.com',
+    'path': '/stores/83d57b1a-4674-46d2-8831-373680d5637d/contracts/' + contractId + '/invoice',
+    'headers': {
+      'X-Extend-Access-Token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InlrZTdAZG9ucy51c2ZjYS5lZHUiLCJhY2NvdW50SWQiOiJmZDEwMzk5Ni1lOWZmLTQ0NTktYmJlNS1mMDlhNzYyYWU4Y2IiLCJzY29wZSI6ImFsbCIsImlhdCI6MTU4NTI2NjkzOSwiZXhwIjoyNTQ5ODc1Njc3MzgsImlzcyI6ImFwaS1kZW1vLmhlbGxvZXh0ZW5kLmNvbSIsInN1YiI6Ijg4MzZkYjgxLTAwOTktNDUyNy1iNjM3LTFjNmQyOWY0MzdjZCJ9.Skqf0CvHKLFoYMkEVr5n8t8fzvWxr0UPPHW1nWIqbyc',
+      'Content-Type': 'application/json'
+    }
+  }
+
+  const service = https.request(contractObject, (serviceRes: any) => {
+
+      res.send(serviceResRequest);
+
+   });
+
+   service.on("error", (e: any) => {
+    res.status(500); 
+    res.render('error', {error: e});
+   })
+   service.end();
+  // res.send("Contract ID: " + req.params.contractId);
+}
