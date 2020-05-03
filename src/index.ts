@@ -1,168 +1,324 @@
-const serviceResRequest = '{"totalAmountDue":{"currencyCode":"USD","value":374},"payer":{"name":"USFExtend "},"payee":{"name":"Extend, Inc.","email":"billing@helloextend.com","address":{"country":"USA","province":"CA","city":"San Francisco","address1":"535 Mission St., 11th Floor","postalCode":"94526"}},"details":{"storeId":"83d57b1a-4674-46d2-8831-373680d5637d","invoiceDate":"2020-04-20T19:46:25.165Z"},"id":"5bcc3be6-41e3-4fa4-bb01-440fa9e9a9c2","items":[{"unitPrice":{"currencyCode":"USD","value":374},"metadata":{"planId":"10001-misc-elec-base-replace-1y","product":{"name":"Airpods Pro Black","referenceId":"1654385435","price":{"currencyCode":"USD","value":23999}}},"quantity":1,"lineTotal":{"currencyCode":"USD","value":374},"discount":{"percent":25,"amount":{"currencyCode":"USD","value":125},"label":"Merchant revenue share"},"title":"10001-misc-elec-base-replace-1y","transactionDate":"2020-04-20T19:45:05.000Z","retailPrice":{"currencyCode":"USD","value":499}}]}'
+// USFCA 2020, Licensed to Extend
+/* START IMPORTS */
 
-const express = require('express')
-const path = require('path')
-const PORT = process.env.PORT || 5000
+const express = require('express');
+const request = require('request');
+const bodyParser = require('body-parser');
+const PORT = process.env.PORT || 5000;
 
 const app = express();
+app.use(bodyParser.json());
 
-app.get('/', (req: any, res: any) => res.send('Hello World'));
+/* END IMPORTS */
+
+/* START SETUP */
+
+
+// Default Path
+app.get('/', (req: any, res: any) => res.send('Extend WooCommerce Integration Demo. Endpoint \'/\' does not do anything. Refer to documentation'));
 
 // Get Contract
-app.get('/contract/:contractId', (req: Object, res: Object) => getContract(req, res));
+app.post('/contract', (req: any, res: any) => createContracts(req, res));
 
+// Get Endpoints
+app.get('/endpoints',  (req: Object, res: any) => res.send('Current Endpoints<br/>----------------<br/>/contract<br/>---<br/>That\'s all. This may be incomplete.'));
 app.listen(PORT, () => console.log(`I'm all ears on ${ PORT }`))
 
-var https = require('follow-redirects').https;
-var fs = require('fs');
-
-var options = {
-  'method': 'GET',
-  'hostname': 'extendwebsite.com',
-  'path': '/wp-json/wc/v2/products',
-  'headers': {
-    'Authorization': 'Basic Y2tfODg1NmUwOWQ1MDMwYjdjNmJhM2E1N2NiZjIwZTlkNzk2ODYxMTliMDpjc185YjkxZGQ5NmU4NjMxNzM0MmQ3YTdjYTg3MzUyNTZmODZhMDg5M2Uz',
-    'Cookie': '__cfduid=d36e6e652677dd5f6fd03c3affb94d1531585433794'
-  },
-  'maxRedirects': 20
-};
-var options2 = {
-  'method': 'POST',
-  'hostname': 'api-demo.helloextend.com',
-  'path': '/stores/83d57b1a-4674-46d2-8831-373680d5637d/products',
-  'headers': {
-    'X-Extend-Access-Token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InlrZTdAZG9ucy51c2ZjYS5lZHUiLCJhY2NvdW50SWQiOiJmZDEwMzk5Ni1lOWZmLTQ0NTktYmJlNS1mMDlhNzYyYWU4Y2IiLCJzY29wZSI6ImFsbCIsImlhdCI6MTU4NTI2NjkzOSwiZXhwIjoyNTQ5ODc1Njc3MzgsImlzcyI6ImFwaS1kZW1vLmhlbGxvZXh0ZW5kLmNvbSIsInN1YiI6Ijg4MzZkYjgxLTAwOTktNDUyNy1iNjM3LTFjNmQyOWY0MzdjZCJ9.Skqf0CvHKLFoYMkEVr5n8t8fzvWxr0UPPHW1nWIqbyc',
-    'Content-Type': 'application/json'
-  },
-  'maxRedirects': 20
-};
-var options3 = {
-  'method': 'GET',
-  'hostname': 'api-demo.helloextend.com',
-  'path': '/stores/83d57b1a-4674-46d2-8831-373680d5637d/products',
-  'headers': {
-    'X-Extend-Access-Token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InlrZTdAZG9ucy51c2ZjYS5lZHUiLCJhY2NvdW50SWQiOiJmZDEwMzk5Ni1lOWZmLTQ0NTktYmJlNS1mMDlhNzYyYWU4Y2IiLCJzY29wZSI6ImFsbCIsImlhdCI6MTU4NTI2NjkzOSwiZXhwIjoyNTQ5ODc1Njc3MzgsImlzcyI6ImFwaS1kZW1vLmhlbGxvZXh0ZW5kLmNvbSIsInN1YiI6Ijg4MzZkYjgxLTAwOTktNDUyNy1iNjM3LTFjNmQyOWY0MzdjZCJ9.Skqf0CvHKLFoYMkEVr5n8t8fzvWxr0UPPHW1nWIqbyc'
-  },
-  'maxRedirects': 20
-};
-
-var jsonResponse;
-var req = https.request(options, function (res) {
-  var req2 = https.request(options2, function (res) {
-    var chunks = [];
-
-    res.on("data", function (chunk) {
-      chunks.push(chunk);
-    });
-
-    res.on("end", function (chunk) {
-      var body = Buffer.concat(chunks);
-      console.log(body.toString());
-    });
-
-    res.on("error", function (error) {
-      console.error(error);
-    });
-  });
-  
-  var body = '';
-
-  res.on("data", function (chunk) {
-     body += chunk;
-  });
-
-  res.on("end", function (chunk) {
-
-    var req3 = https.request(options, function (res) {
-      var chunks = [];
-
-      res.on("data", function (chunk) {
-        chunks.push(chunk);
-      });
-
-      res.on("end", function (chunk) {
-        var body2 = Buffer.concat(chunks);
-        var jsonResponse2 = JSON.parse(body2);
-        jsonResponse = JSON.parse(body);
-        counter = 0;
-        counter2 = 0;
-        let myMap = new Map()
-        for (const property2 in jsonResponse2) {
-          var sku = parseInt(jsonResponse2[counter2]["sku"]);
-          var title = jsonResponse2[counter2]["name"];
-          myMap.set(sku,title);
-          counter2++;
-          
-        }
-
-        for (const property in jsonResponse) {
-          //console.log("Got a response: ", jsonResponse[counter]);
-          //console.log("Got a response:", jsonResponse[counter]["id"]);
-          var id = parseInt(jsonResponse[counter]["id"]);
-          // console.log("Got a response:", id);
-          var price = parseInt(jsonResponse[counter]["price"]);
-          var sku = parseInt(jsonResponse[counter]["sku"]);
-          var title = jsonResponse[counter]["name"];
-          console.log("Got a response: ", (myMap.get(sku)));
-          if (id >55) {
-            var postData = JSON.stringify({"createdAt":1585094707876,"storeId":"83d57b1a-4674-46d2-8831-373680d5637d","enabled":false,"approved":false,"imageUrl":"http://lorempixel.com/640/480","overrides":{"mfrWarranty":{"parts":12,"url":"apple.com/warranty","labor":12}},"updatedAt":1585095730222,"identifiers":{},"plans":["10001-misc-elec-base-replace-1y","10001-misc-elec-base-replace-2y","10001-misc-elec-base-replace-3y"],"mfrWarranty":{},"warrantyStatus":"warrantable","price":price,"referenceId":sku,"title":title});
-          
-
-            req2.write(postData);
-
-            req2.end();
-          }
-
-          counter++;
-        }
-
-
-      });
-
-      res.on("error", function (error) {
-        console.error(error);
-      });
-    });
-    req3.end();
-  });
-
-  res.on("error", function (error) {
-    console.error(error);
-  });
-});
-req.end();
-
+/* END SETUP */
 
 /*
 
-  CONTRACT Retrieving
-
+  CONTRACT Retrieving (Marko Crnkovic)
+  
 */
 
-function getContract(req: any, res: any) {
+/* Interfaces */
+// TODO: FILL
 
-  const contractId = req.params.contractId;
+// Creates customer object from blob and returns it. Takes preference over shipping addres for customer details
+// but will use billing details if shipping details don't exist
+// Returns:
+//        - Object filled with customer details per Extend's formatting
+//        - or -
+//        - Error object to be passed through response
+function getCustomer(blob: any) {
+  function getAddress(addrBlob: any) {
+    var retObj: any = {};
 
-  var contractObject = {
-    'method': 'GET',
-    'hostname': 'api-demo.helloextend.com',
-    'path': '/stores/83d57b1a-4674-46d2-8831-373680d5637d/contracts/' + contractId + '/invoice',
-    'headers': {
-      'X-Extend-Access-Token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InlrZTdAZG9ucy51c2ZjYS5lZHUiLCJhY2NvdW50SWQiOiJmZDEwMzk5Ni1lOWZmLTQ0NTktYmJlNS1mMDlhNzYyYWU4Y2IiLCJzY29wZSI6ImFsbCIsImlhdCI6MTU4NTI2NjkzOSwiZXhwIjoyNTQ5ODc1Njc3MzgsImlzcyI6ImFwaS1kZW1vLmhlbGxvZXh0ZW5kLmNvbSIsInN1YiI6Ijg4MzZkYjgxLTAwOTktNDUyNy1iNjM3LTFjNmQyOWY0MzdjZCJ9.Skqf0CvHKLFoYMkEVr5n8t8fzvWxr0UPPHW1nWIqbyc',
-      'Content-Type': 'application/json'
-    }
+    // adding a temporary customer object. Later we will query all
+    // address objects and work with them
+    var customerObj: any = {};
+
+    customerObj['fname'] = addrBlob.first_name;
+    customerObj['lname'] = addrBlob.last_name;
+    customerObj['email'] = addrBlob.email;
+    customerObj['phone'] = addrBlob.phone;
+
+    retObj['address1']     = addrBlob.address_1;
+    retObj['address2']     = addrBlob.address_2;
+    retObj['city']         = addrBlob.city;
+    retObj['provinceCode'] = addrBlob.state;
+    retObj['countryCode']  = addrBlob.country;
+    retObj['postalCode']   = addrBlob.postcode;
+    retObj["_tmp_customer"] = customerObj;
+    
+    return retObj;
   }
 
-  const service = https.request(contractObject, (serviceRes: any) => {
+  var customerObject: any = {};
 
-      res.send(serviceResRequest);
+  var shippingData: any = getAddress(blob.shipping);
+  var billingData: any = getAddress(blob.billing);
 
-   });
+  // Extract customer data
+  // Shipping data takes precedence.
+  // Data from billingData gets written. data from shippingData overwrites billing data.
+  // This effectivley combines both objects while giving shippingData precedence over billingData
 
-   service.on("error", (e: any) => {
-    res.status(500); 
-    res.render('error', {error: e});
-   })
-   service.end();
-  // res.send("Contract ID: " + req.params.contractId);
+  if (Object.keys(billingData._tmp_customer).length !== 0) {
+    let cobj = billingData._tmp_customer;
+    
+    const name = cobj.fname + " " + cobj.lname;
+    customerObject['name'] = name;
+
+    customerObject['email'] = cobj.email;
+    customerObject['phone'] = cobj.phone;
+  }
+
+  if (Object.keys(shippingData._tmp_customer).length !== 0) {
+    let cobj = shippingData._tmp_customer;
+    
+    if (cobj.fname && cobj.lname) {
+      const name = cobj.fname + " " + cobj.lname;
+      customerObject['name'] = name;
+    }
+    if (cobj.email) {
+      customerObject['email'] = cobj.email;
+    }
+
+  }
+  // Error checking
+  if ( !(customerObject.email)) {
+    console.error("[Index.ts getCustomer]: Could not extract EMAIL fom customer information.");
+    return {error : "[Index.ts getCustomer]: Could not extract EMAIL from customer information."}
+  }
+
+  if (!(customerObject.name)) {
+    console.error("[Index.ts getCustomer]: Could not extract NAME fom customer information.");
+    return {error : "[Index.ts getCustomer]: Could not extract NAME from customer information."}
+  }
+
+  // Sanatize both objects.
+  delete shippingData['_tmp_customer'];
+  delete billingData['_tmp_customer'];
+
+  // Append data to object
+  customerObject['address'] = shippingData;
+  customerObject['billingAddress'] = billingData;
+
+  // return object
+  return customerObject
+  
+}
+
+
+// Parses products from woo-commerce's "line_items" into an object with {"warranties" : [], "products": []}
+// NOTE: This could be optimized for time complexity, but in reality how big 
+// will a cart actually get? Even with 1k objects O(n) isn't
+// too bad
+//
+// NOTE: This is a helper function for createWarrantyObjects:lineItems
+function parseProducts(lineItems: [any]) {
+  var parsed: any = {warranties: [], products: []};
+
+  // Takes items with quantities > 1 and seperates them appending the extra ones to the end
+  lineItems.forEach(item => {
+    var quantity = item.quantity;
+    while (quantity > 1) {
+      lineItems.push(item);
+    }
+  });
+
+  lineItems.forEach(item => {
+    // SKU is planID with "extend-" prepended. This us denote what products are plans vs products
+    if (item.sku.includes("extend-")) {
+      parsed.warranties.push(item);
+    } else {
+      parsed.products.push(item);
+    }
+  })
+
+  return parsed;
+}
+
+// creates full warranty objects that are ready to be combined with global data in createCompleteObjects:reqBody:customer:warrantyObjects
+function createWarrantyObjects(lineItems: [any]) {
+  var objs = parseProducts(lineItems);
+  var warrantyProductObjects: any[] = []; // objects get filled with warranty data and will get customer data inserted before being sent
+  // Golden Path checking
+  if (objs.warranties.length < 1) {
+    return;
+  }
+
+  objs.warranties.forEach((warranty: any) => {
+    
+    const productSKU = warranty.meta_data[0]; // warranty should be the only thing in the meta_data array
+
+    var planId = warranty.sku.split('extend-')[1]; // SKU is planID with "extend-" prepended. This us denote what products are plans vs products
+    var planObject: any = {}; 
+    planObject['purchasePrice'] = warranty.price * 100;
+    planObject['planId'] = planId;
+
+    // using this so it can be terminated on hit
+    for (var i = 0; i < objs.products.length; i++) {
+      const product = objs.products[i];
+        if (product.sku === productSKU) { 
+        // calculate total since woo uses 00.00 for total
+
+          var _price: number = + product.price * 100;
+
+          var warrantyObject: any = {}
+          warrantyObject['product'] = {referenceId: product.sku, purchasePrice: _price } // omitting serialNumber
+          warrantyObject['plan'] = planObject;
+          warrantyProductObjects.push(warrantyObject);
+          break;
+      }
+    };
+  });
+
+  return warrantyProductObjects;
+}
+
+/// combines global data like customer and transaction data with warranties.
+/// returns list of complete warranty objects
+function createCompleteObjects(reqBody: any, customer: any, warrantyObjects: any[] | undefined) {
+  var completeObjects: any[] = [];
+
+  if (warrantyObjects === undefined) {
+    console.error("warranty objects are undefined.")
+    return;
+  }
+
+  warrantyObjects.forEach(warranty => {    
+    // warranty object information
+    warranty['transactionId']    = reqBody.number;
+    warranty['poNumber']         = reqBody.order_key;
+    warranty['transactionTotal'] = (+reqBody.total * 100); // since total is in 00.00
+    warranty['currency']         = reqBody.currency; // can't find documentation on ISO standard for currency denotion
+    warranty['transactionDate']  = new Date(reqBody.date_modified_gmt).valueOf(); // converts 2020-04-30T19:14:11 to epoch (hopefully)
+
+    warranty['customer'] = customer;
+
+    completeObjects.push(warranty);
+  });
+  return completeObjects;
+}
+
+// iterates through warranties and sends them to extend
+function sendRequests(warranties: any[] | undefined, completion: (_: boolean) => void) {
+
+  if (warranties === undefined) {
+    console.error("Warranties object in sendRequests is udnefined.");
+    return false;
+  }
+
+  // WARNING: this logic might become result in race condition.
+  // This is not addressed further due to the scope of the project, but please
+  // consider the atomacy of "jobs"
+  
+  // Jobs add themselves to the this makeshift operation queue.
+  // As they complete they either change from "working" to "complete" or "failed" and call checkJobs:
+  // check job checks for any "working" jobs, and if there are none it calls the closure with
+  // success denoting the logical inverse of the extistance of any "failed" jobs.
+  var jobs: any = {};
+
+  // Basic job buffer. If list includes a 'failed' job, a call has failed.
+  function checkJobs() {
+    var complete: boolean = true;
+    var hasFailure: boolean = false;
+
+     Object.keys(jobs).forEach(job => {
+      if (jobs[job] === "working") {
+        complete = false;
+      } else if (jobs[job] == "failed") {
+        hasFailure = true;
+      }
+     });
+
+     if (complete) {
+      if (hasFailure) {
+        completion(false);
+      } else {
+        completion(true);
+      }
+     }
+  }
+
+  warranties.forEach(warranty => {
+
+     var contractObject: any = {
+      'method': 'POST',
+      'url': 'https://api-demo.helloextend.com/stores/83d57b1a-4674-46d2-8831-373680d5637d/contracts',
+      'headers': {
+        'X-Extend-Access-Token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InlrZTdAZG9ucy51c2ZjYS5lZHUiLCJhY2NvdW50SWQiOiJmZDEwMzk5Ni1lOWZmLTQ0NTktYmJlNS1mMDlhNzYyYWU4Y2IiLCJzY29wZSI6ImFsbCIsImlhdCI6MTU4NTI2NjkzOSwiZXhwIjoyNTQ5ODc1Njc3MzgsImlzcyI6ImFwaS1kZW1vLmhlbGxvZXh0ZW5kLmNvbSIsInN1YiI6Ijg4MzZkYjgxLTAwOTktNDUyNy1iNjM3LTFjNmQyOWY0MzdjZCJ9.Skqf0CvHKLFoYMkEVr5n8t8fzvWxr0UPPHW1nWIqbyc',
+        'Content-Type': 'application/json'
+      },
+      body: '{"transactionId":"1","transactionTotal":23999,"customer":{"phone":"518-506-2642","email":"mcrnkovic@usfca.edu","name":"Marko Crnkovic","address":{"address1":"1 Stockton St","address2":"","city":"San Francisco","countryCode":"USA","postalCode":"90001","provinceCode":"CA"},"shipping-address":{"address1":"2 Stockton St","address2":"","city":"San Francisco","countryCode":"USA","postalCode":"90001","provinceCode":"CA"}},"product":{"referenceId":"1654385435","purchasePrice":23999},"currency":"USD","transactionDate":1587411905,"plan":{"purchasePrice":499,"planId":"10001-misc-elec-base-replace-1y"}}'
+     }
+
+    jobs[warranty.transactionId] = "working";
+
+    request(contractObject, (error: any, res: any, body: any) => {
+      if (error) {
+        console.error(error);
+        jobs[warranty.transactionId] = "failed";
+      } else if (res.statusCode != 201) {
+        console.error(body);
+        console.error(res.code);
+        jobs[warranty.transactionId] = "failed";
+      } else {
+        console.log(body);
+        jobs[warranty.transactionId] = "complete";
+      }
+      checkJobs();
+    });
+
+  });
+  return true;
+}
+
+// Essentailly the main function
+// Runs on golden path flow
+function createContracts(req: any, res: any) {
+  
+  // Parse WooCommerce Object
+  var customer = getCustomer(req.body);
+ 
+  if ("error" in customer) {
+    // getCustomer IS the error object now, so we can pass
+    // it through the response. 
+    res.status(500).send(customer);
+    return;
+  }
+
+  // Creates objects with product, and plan tags filled
+  var warrantyObjects = createWarrantyObjects(req.body.line_items);
+  
+  // Populates the rest of the data. This data is global, that's why it's abstracted to
+  // another function.
+  var completeObjects = createCompleteObjects(req.body, customer, warrantyObjects);
+  // console.log(completeObjects);
+  // Send contracts to Extend. Monitor success status
+  sendRequests(completeObjects, success => {
+    // Report success back to webhook in case it's monitoring
+    // Helpful for debugging
+    if (success === true) {
+      res.sendStatus(200);
+    } else {
+      console.error("Error in sending contracts to Extend. Look at above logs");
+      res.sendStatus(500); 
+    }  
+  });
+
+
 }

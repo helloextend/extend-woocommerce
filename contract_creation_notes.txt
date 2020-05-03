@@ -1,0 +1,1 @@
+WC blob includes currency and price is in Float. This might be an issue for intl customers. found currency tag though so maybe not
