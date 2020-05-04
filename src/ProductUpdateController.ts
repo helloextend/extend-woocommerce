@@ -114,20 +114,20 @@ class ProductUpdateController {
                                     myMap.delete(skuVariant);
                                 }
                                 else {
-                                var options9 = {
-                                    'method': 'POST',
-                                    'url': 'https://api-demo.helloextend.com/stores/83d57b1a-4674-46d2-8831-373680d5637d/products',
-                                    'headers': {
-                                    'X-Extend-Access-Token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InlrZTdAZG9ucy51c2ZjYS5lZHUiLCJhY2NvdW50SWQiOiJmZDEwMzk5Ni1lOWZmLTQ0NTktYmJlNS1mMDlhNzYyYWU4Y2IiLCJzY29wZSI6ImFsbCIsImlhdCI6MTU4NTI2NjkzOSwiZXhwIjoyNTQ5ODc1Njc3MzgsImlzcyI6ImFwaS1kZW1vLmhlbGxvZXh0ZW5kLmNvbSIsInN1YiI6Ijg4MzZkYjgxLTAwOTktNDUyNy1iNjM3LTFjNmQyOWY0MzdjZCJ9.Skqf0CvHKLFoYMkEVr5n8t8fzvWxr0UPPHW1nWIqbyc',
-                                    'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({"createdAt":secondsSinceEpoch,"storeId":"83d57b1a-4674-46d2-8831-373680d5637d","enabled":false,"approved":false,"imageUrl":imageVariant,"overrides":{"mfrWarranty":{"parts":12,"url":"apple.com/warranty","labor":12}},"updatedAt":secondsSinceEpoch,"identifiers":{},"plans":["10001-misc-elec-base-replace-1y","10001-misc-elec-base-replace-2y","10001-misc-elec-base-replace-3y"],"mfrWarranty":{},"warrantyStatus":"warrantable","price":priceVariant,"referenceId":skuVariant,"title":titleVariant})
+                                    var options9 = {
+                                        'method': 'POST',
+                                        'url': 'https://api-demo.helloextend.com/stores/83d57b1a-4674-46d2-8831-373680d5637d/products',
+                                        'headers': {
+                                        'X-Extend-Access-Token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InlrZTdAZG9ucy51c2ZjYS5lZHUiLCJhY2NvdW50SWQiOiJmZDEwMzk5Ni1lOWZmLTQ0NTktYmJlNS1mMDlhNzYyYWU4Y2IiLCJzY29wZSI6ImFsbCIsImlhdCI6MTU4NTI2NjkzOSwiZXhwIjoyNTQ5ODc1Njc3MzgsImlzcyI6ImFwaS1kZW1vLmhlbGxvZXh0ZW5kLmNvbSIsInN1YiI6Ijg4MzZkYjgxLTAwOTktNDUyNy1iNjM3LTFjNmQyOWY0MzdjZCJ9.Skqf0CvHKLFoYMkEVr5n8t8fzvWxr0UPPHW1nWIqbyc',
+                                        'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({"createdAt":secondsSinceEpoch,"storeId":"83d57b1a-4674-46d2-8831-373680d5637d","enabled":false,"approved":false,"imageUrl":imageVariant,"overrides":{"mfrWarranty":{"parts":12,"url":"apple.com/warranty","labor":12}},"updatedAt":secondsSinceEpoch,"identifiers":{},"plans":["10001-misc-elec-base-replace-1y","10001-misc-elec-base-replace-2y","10001-misc-elec-base-replace-3y"],"mfrWarranty":{},"warrantyStatus":"warrantable","price":priceVariant,"referenceId":skuVariant,"title":titleVariant})
 
-                                };
-                                request(options9, function (error: any, response: any) { 
-                                    if (error) throw new Error(error);
-                                    console.log(response.body);
-                                });
+                                    };
+                                    request(options9, function (error: any, response: any) { 
+                                        if (error) throw new Error(error);
+                                        console.log(response.body);
+                                    });
                                 }
                             }); 
                         }
