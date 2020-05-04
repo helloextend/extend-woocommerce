@@ -88,7 +88,8 @@ class ProductUpdateController {
                                 var priceVariant = (parseInt(jsonResponseVariant["price"])*100)+99;
                                 var skuVariant = parseInt(jsonResponseVariant["sku"]);
                                 var titleVariant = jsonResponseVariant["name"];
-                                var imageVariant = jsonResponseVariant["images"]
+                                var imageVariant = jsonResponseVariant["images"];
+
                                 if (imageVariant === undefined || imageVariant.length == 0) {
                                     imageVariant = "";
                                 }
