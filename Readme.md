@@ -23,6 +23,10 @@ This project integrates Extend into WooCommerce's platform.
 
 > `yarn start` calls upon `yarn build`
 
+### Manual Setup for Sync
+
+In case you want to manually run the sync or are having trouble with the current sync, there is a JavaScript Version runable [here](https://repl.it/@Tjimenez3/Testing-Repl).
+
 ### Contribution Rules
 
 **🛑 DO NOT CIRCUMVENT GIT HOOKS 🛑**
